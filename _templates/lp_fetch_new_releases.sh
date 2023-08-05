@@ -16,7 +16,7 @@ declare -a REPOS=(  # belong to the UPSTREAM_GH_PROJECT -- # TODO: replace
 for repo in "${REPOS[@]}"; do
     echo "${repo}"
 
-    pushd ../ || exit 1
+    pushd ../.. || exit 1
 
     # locate the locate repo
     local_repo="$(echo "${repo}" | awk '{print tolower($0)}')"
