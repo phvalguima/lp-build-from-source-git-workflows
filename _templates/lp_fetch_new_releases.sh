@@ -3,8 +3,6 @@
 set -eux
 
 PRODUCT="YOUR_PRODUCT_NAME"  # TODO: replace, i.e: opensearch
-UPSTREAM_GH_PROJECT="https://github.com/THE_PROJECT_OF_THE_PRODUCT"  # TODO: replace, i.e: https://github.com/opensearch-project
-LP_USER_NAME="YOUR_LP_USER_NAME"  # TODO: replace, i.e: medib
 declare -a VERSIONS=(  # TODO: replace
     # major_minor_version_1 (i.e 2.8)
     # major_minor_version_2 (i.e 2.9)
