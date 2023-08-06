@@ -7,7 +7,7 @@ pushd ../..
 remote_url="distributionUrl=https\\\:\/\/services.gradle.org\/distributions"
 jfrog_url="distributionUrl=https\\\:\/\/canonical.jfrog.io\/ui\/native\/dataplatform-generic-stable-local\/gradle"
 
-find . -maxdepth 1 -name "opensearch-*" -type d | awk '{print $1}' | while read -r project; do
+find . -maxdepth 1 -name "opensearch*" -type d | awk '{print $1}' | while read -r project; do
     pushd "${project}" || exit 1
 
     if [[ "${project}" == *python ]]; then
@@ -17,6 +17,10 @@ find . -maxdepth 1 -name "opensearch-*" -type d | awk '{print $1}' | while read 
     if [[ "${project}" == *opensearch-performance-analyzer-rca ]]; then
         git checkout main
         sed -i -e "s/^${remote_url}\+/${jfrog_url}/g" gradle/wrapper/gradle-wrapper.properties
+        git add .
+        git commit -m "changed gradle distro url"
+        git push launchpad
+
         popd || exit 1
         continue
     fi
