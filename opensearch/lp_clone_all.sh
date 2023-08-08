@@ -2,7 +2,7 @@
 
 set -eux
 
-declare -a VERSIONS=("2.9" "2.8")
+declare -a VERSIONS=("2.9.0" "2.8.0")
 declare -a REPOS=(
     opensearch-build
     OpenSearch
@@ -25,6 +25,9 @@ declare -a REPOS=(
     index-management
     performance-analyzer
 )
+LP_SOSS_REMOTE="git+ssh://medib@git.launchpad.net/soss/+source"
+LP_PUBLIC_REMOTE="git+ssh://medib@git.launchpad.net/~medib/+git" # opensearch-project-components
+
 for repo in "${REPOS[@]}"; do
     echo "${repo}"
 
@@ -36,7 +39,7 @@ for repo in "${REPOS[@]}"; do
         local_repo="opensearch-${local_repo}"
     fi
 
-    git clone --single-branch --branch main "https://github.com/opensearch-project/${repo}.git" "${local_repo}"
+    [ -d "${local_repo}" ] || git clone --single-branch --branch main "https://github.com/opensearch-project/${repo}.git" "${local_repo}"
     pushd "${local_repo}" || exit 1
 
     # fetch all tags
@@ -44,7 +47,11 @@ for repo in "${REPOS[@]}"; do
     git fetch --all --tags
 
     # add launchpad remote for push
-    git remote add launchpad "git+ssh://medib@git.launchpad.net/soss/+source/${local_repo}"
+    lp_remote="${LP_PUBLIC_REMOTE}"
+    if [[ "${repo}" == "opensearch-build" ]]; then
+        lp_remote="${LP_SOSS_REMOTE}"
+    fi
+    git remote add launchpad "${lp_remote}/${local_repo}"
 
     for version in "${VERSIONS[@]}"; do
         GH_BRANCH="${version}"
@@ -64,7 +71,7 @@ for repo in "${REPOS[@]}"; do
         git checkout -b "${LP_BRANCH}"
 
         # fetch current version's latest tag and tag current
-        lp_tag_name="lp-${version_tag}"
+        lp_tag_name="lp-v${version_tag}"
         git tag -a "${lp_tag_name}" "${gh_release_commit}" -m "tagging commit with tag: ${lp_tag_name}" --force
 
         # push lp version branch to LP
@@ -108,13 +115,13 @@ for repo in "${ALTERNATE_REPOS[@]}"; do
     git fetch --all --tags
 
     # add launchpad remote for push
-    git remote add launchpad "git+ssh://medib@git.launchpad.net/soss/+source/${local_repo}"
+    git remote add launchpad "${LP_PUBLIC_REMOTE}/${local_repo}"
 
     # push lp version branch to LP
     git push -f --set-upstream launchpad main
 
     # rename default main branch created by soss
-    git push launchpad --delete old_main
+    git push launchpad --delete old_main || true
 
     popd || exit 1
     popd || exit 1

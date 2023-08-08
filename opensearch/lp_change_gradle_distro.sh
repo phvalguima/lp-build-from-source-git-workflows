@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-declare -a VERSIONS=("2.9" "2.8")
+declare -a VERSIONS=("2.9.0" "2.8.0")
 
 pushd ../..
 
@@ -39,7 +39,7 @@ find . -maxdepth 1 -name "opensearch*" -type d | awk '{print $1}' | while read -
         git commit -m "changed gradle distro url"
         git push launchpad
 
-        version_tag="$(git tag -l --sort=version:refname "lp-${version}.*" | tail -1)"
+        version_tag="$(git tag -l --sort=version:refname "lp-v${version}.*" | tail -1)"
         git tag "${version_tag}" --force
         git push launchpad "${version_tag}" --force
 
