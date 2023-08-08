@@ -92,8 +92,8 @@ done
 # performance analyzer RCA, and faiss and nmslib
 declare -a ALTERNATE_REPOS=(
     https://github.com/opensearch-project/performance-analyzer-rca.git
-    # https://github.com/facebookresearch/faiss.git
-    # https://github.com/nmslib/nmslib.git
+    https://github.com/facebookresearch/faiss.git
+    https://github.com/nmslib/nmslib.git
 )
 for repo in "${ALTERNATE_REPOS[@]}"; do
     echo "${repo}"
@@ -107,7 +107,11 @@ for repo in "${ALTERNATE_REPOS[@]}"; do
         local_repo="python-${local_repo}"
     fi
 
-    git clone --single-branch --branch main "${repo}" "${local_repo}"
+    main_branch="main"
+    if [[ "${repo}" == *nmslib* ]]; then
+        main_branch="master"
+    fi
+    git clone --single-branch --branch "${main_branch}" "${repo}" "${local_repo}"
     pushd "${local_repo}" || exit 1
 
     # fetch all tags
@@ -118,7 +122,7 @@ for repo in "${ALTERNATE_REPOS[@]}"; do
     git remote add launchpad "${LP_PUBLIC_REMOTE}/${local_repo}"
 
     # push lp version branch to LP
-    git push -f --set-upstream launchpad main
+    git push -f --set-upstream launchpad "${main_branch}"
 
     # rename default main branch created by soss
     git push launchpad --delete old_main || true
