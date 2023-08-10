@@ -34,6 +34,7 @@ find . -maxdepth 1 -name "opensearch*" -type d | awk '{print $1}' | while read -
         fi
 
         sed -i -e "s/^${remote_url}\+/${jfrog_url}/g" "${gradle_wrapper}"
+        sed -i -e "s/^distributionSha256Sum\+/# distributionSha256Sum/g" "${gradle_wrapper}"
 
         git add .
         git commit -m "changed gradle distro url"
