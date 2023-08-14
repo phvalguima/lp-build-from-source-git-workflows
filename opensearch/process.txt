@@ -35,12 +35,14 @@ changes by repo:
     - opensearch-observability
         - replace gradle binaries path to artifactory
     - opensearch-performance-analyzer
-        - update LP performance-analyzer-rca with latest main content
+        - update LP performance-analyzer-rca with latest "branch" content
+            - replace "2.8" with "lp-2.8"
         - replace repo of performance-analyzer-rca to LP one
         - replace gradle binaries path to artifactory
     - opensearch-performance-analyzer-rca
         - update LP performance-analyzer-rca with latest main content
         - replace gradle binaries path to artifactory
+        - clone version branch and create new lp-version out of it
     - opensearch-reporting
         - replace gradle binaries path to artifactory
     - opensearch-security

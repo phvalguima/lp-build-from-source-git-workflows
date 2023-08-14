@@ -53,6 +53,11 @@ for repo in "${REPOS[@]}"; do
     fi
     git remote add launchpad "${lp_remote}/${local_repo}"
 
+    # TODO: add case of opensearch-performance-analyzer-rca:
+      # - pull branch on rca (not tag based)
+      # - checkout new lp-version branch out of it
+      # - change branch name on build.gradle of performance-analyzer (add lp- prefix)
+
     for version in "${VERSIONS[@]}"; do
         GH_BRANCH="${version}"
         LP_BRANCH="lp-${version}"
