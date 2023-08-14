@@ -5,7 +5,7 @@ declare -a VERSIONS=("2.9.0" "2.8.0")
 pushd ../..
 
 remote_url="distributionUrl=https\\\:\/\/services.gradle.org\/distributions"
-jfrog_url="distributionUrl=https\\\:\/\/canonical.jfrog.io\/ui\/native\/dataplatform-generic-stable-local\/gradle"
+jfrog_url="distributionUrl=https\\\:\/\/canonical.jfrog.io\/artifactory\/dataplatform-generic-stable-local\/gradle"
 
 find . -maxdepth 1 -name "opensearch*" -type d | awk '{print $1}' | while read -r project; do
     pushd "${project}" || exit 1
@@ -34,7 +34,7 @@ find . -maxdepth 1 -name "opensearch*" -type d | awk '{print $1}' | while read -
         fi
 
         sed -i -e "s/^${remote_url}\+/${jfrog_url}/g" "${gradle_wrapper}"
-        sed -i -e "s/^distributionSha256Sum\+/# distributionSha256Sum/g" "${gradle_wrapper}"
+        sed -i -e "s/^# distributionSha256Sum\+/distributionSha256Sum/g" "${gradle_wrapper}"
 
         git add .
         git commit -m "changed gradle distro url"
