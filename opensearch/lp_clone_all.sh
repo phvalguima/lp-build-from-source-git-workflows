@@ -99,6 +99,7 @@ declare -a ALTERNATE_REPOS=(
     https://github.com/opensearch-project/performance-analyzer-rca.git
     https://github.com/facebookresearch/faiss.git
     https://github.com/nmslib/nmslib.git
+    https://github.com/google/googletest.git
 )
 for repo in "${ALTERNATE_REPOS[@]}"; do
     echo "${repo}"
@@ -108,7 +109,7 @@ for repo in "${ALTERNATE_REPOS[@]}"; do
     local_repo="$(echo "${repo}" | awk '{print tolower($0)}' | awk -F/ '{print $NF}' | awk -F. '{print $1}')"
     if [[ ${repo} == *opensearch-project* ]]; then
         local_repo="opensearch-${local_repo}"
-    else
+    elif [[ ${repo} != *googletest* ]]; then
         local_repo="python-${local_repo}"
     fi
 
