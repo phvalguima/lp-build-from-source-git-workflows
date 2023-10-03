@@ -25,6 +25,7 @@ declare -a REPOS=(
     security-analytics
     index-management
     performance-analyzer
+    custom-codecs
 )
 LP_SOSS_REMOTE="git+ssh://medib@git.launchpad.net/soss/+source"
 LP_PUBLIC_REMOTE="git+ssh://medib@git.launchpad.net/~medib/+git" # opensearch-project-components
