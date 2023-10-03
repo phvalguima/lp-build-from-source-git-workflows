@@ -2,7 +2,8 @@
 
 set -eux
 
-declare -a VERSIONS=("2.9.0" "2.8.0")
+# declare -a VERSIONS=("2.9.0" "2.8.0")
+declare -a VERSIONS=("2.10.0")
 declare -a REPOS=(
     opensearch-build
     OpenSearch
@@ -39,11 +40,14 @@ for repo in "${REPOS[@]}"; do
         local_repo="opensearch-${local_repo}"
     fi
 
+    echo "$local_repo"
+
     [ -d "${local_repo}" ] || git clone --single-branch --branch main "https://github.com/opensearch-project/${repo}.git" "${local_repo}"
     pushd "${local_repo}" || exit 1
 
+    git remote -v
     # fetch all tags
-    git pull
+    # git pull
     git fetch --all --tags
 
     # add launchpad remote for push
@@ -51,7 +55,7 @@ for repo in "${REPOS[@]}"; do
     if [[ "${repo}" == "opensearch-build" ]]; then
         lp_remote="${LP_SOSS_REMOTE}"
     fi
-    git remote add launchpad "${lp_remote}/${local_repo}"
+    git remote add launchpad "${lp_remote}/${local_repo}" || true
 
     # TODO: add case of opensearch-performance-analyzer-rca:
       # - pull branch on rca (not tag based)
@@ -63,10 +67,19 @@ for repo in "${REPOS[@]}"; do
         LP_BRANCH="lp-${version}"
 
         # add remote version branch
-        # git remote set-branches --add "origin" "${GH_BRANCH}"
+        if [[ "${version}" > "2\.9" ]]; then
+            GH_BRANCH="main"
+        fi
+        git remote set-branches --add "origin" "${GH_BRANCH}"
+
+        # tag format may change between build project and components
+        ref_name="${version}.*"
+        if [ "${repo}" == "opensearch-build" ] || [ "${repo}" == "OpenSearch" ]; then
+            ref_name="${version}"
+        fi
 
         # get version / release tag and associated commit
-        version_tag="$(git tag -l --sort=version:refname "${version}.*" | tail -1)"
+        version_tag="$(git tag -l --sort=version:refname "${ref_name}" | tail -1)"
         gh_release_commit="$(git show-ref -s "${version_tag}")"
 
         # checkout version branch
@@ -117,7 +130,7 @@ for repo in "${ALTERNATE_REPOS[@]}"; do
     if [[ "${repo}" == *nmslib* ]]; then
         main_branch="master"
     fi
-    git clone --single-branch --branch "${main_branch}" "${repo}" "${local_repo}"
+    [ -d "${local_repo}" ] || git clone --single-branch --branch "${main_branch}" "${repo}" "${local_repo}"
     pushd "${local_repo}" || exit 1
 
     # fetch all tags
@@ -125,7 +138,7 @@ for repo in "${ALTERNATE_REPOS[@]}"; do
     git fetch --all --tags
 
     # add launchpad remote for push
-    git remote add launchpad "${LP_PUBLIC_REMOTE}/${local_repo}"
+    git remote add launchpad "${LP_PUBLIC_REMOTE}/${local_repo}" || true
 
     # push lp version branch to LP
     git push -f --set-upstream launchpad "${main_branch}"
