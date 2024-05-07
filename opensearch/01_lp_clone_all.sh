@@ -5,7 +5,7 @@ set -eux
 USERNAME=pguimaraes
 
 # declare -a VERSIONS=("2.9.0" "2.8.0")
-declare -a VERSIONS=("2.11.1")
+declare -a VERSIONS=("2.13.0")
 
 LP_SOSS_REMOTE="git+ssh://$USERNAME@git.launchpad.net/soss/+source"
 LP_PUBLIC_REMOTE="git+ssh://$USERNAME@git.launchpad.net/~data-platform/+git" # opensearch-project-components
@@ -110,6 +110,7 @@ declare -a REPOS=(
     index-management
     performance-analyzer
     custom-codecs
+    skills
 )
 opensearch_git_checkout "https://github.com/opensearch-project"
 

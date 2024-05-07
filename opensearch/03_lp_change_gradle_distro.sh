@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # declare -a VERSIONS=("2.9.0" "2.8.0")
-declare -a VERSIONS=("2.11.1")
+declare -a VERSIONS=("2.13.0")
 
 USERNAME=pguimaraes
 
