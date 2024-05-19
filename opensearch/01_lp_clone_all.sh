@@ -111,6 +111,7 @@ declare -a REPOS=(
     performance-analyzer
     custom-codecs
     skills
+    flow-framework
 )
 opensearch_git_checkout "https://github.com/opensearch-project"
 
