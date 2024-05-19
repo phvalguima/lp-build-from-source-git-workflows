@@ -29,6 +29,21 @@ find . -maxdepth 1 -name "opensearch*" -type d | awk '{print $1}' | while read -
         continue
     fi
 
+    if [[ "${project}" == *opensearch-prometheus-exporter-plugin-for-opensearch ]]; then
+        # prometheus exporter needs some extra scripts to make it work with OpenSearch build mechanism
+        # So, besides the gradle-wrapper.properties, we also need some extra information.
+        # Pull it from another branch:
+        original_branch="$(git branch --show-current)"
+        git checkout lp-2.13.0
+        git switch "${original_branch}"
+
+        git cherry-pick 6d71f243367f7e28e6262d929122134c2259499c
+        git push launchpad
+
+        popd || exit 1
+        continue
+    fi
+
     for version in "${VERSIONS[@]}"; do
         git checkout "lp-${version}"
 
