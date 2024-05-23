@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# declare -a VERSIONS=("2.9.0" "2.8.0")
-declare -a VERSIONS=("2.13.0")
+declare -a VERSIONS=("2.14.0")
 
 USERNAME=pguimaraes
 
@@ -23,6 +22,22 @@ find . -maxdepth 1 -name "opensearch*" -type d | awk '{print $1}' | while read -
         sed -i -e "s/^${remote_url}\+/${jfrog_url}/g" gradle/wrapper/gradle-wrapper.properties
         git add .
         git commit -m "changed gradle distro url"
+        git push launchpad
+
+        popd || exit 1
+        continue
+    fi
+
+    if [[ "${project}" == *opensearch-build ]]; then
+        # prometheus exporter needs some extra scripts to make it work with OpenSearch build mechanism
+        # So, besides the gradle-wrapper.properties, we also need some extra information.
+        # Pull it from another branch:
+        original_branch="$(git branch --show-current)"
+        git checkout lp-2.14.0
+        git switch "${original_branch}"
+
+        # Needed because we need to add several files, such as .launchpad.yaml
+        git cherry-pick c15653f10ff00437e4fd62ac2cc455aef597731e
         git push launchpad
 
         popd || exit 1
