@@ -4,8 +4,7 @@ set -eux
 
 USERNAME=pguimaraes
 
-# declare -a VERSIONS=("2.9.0" "2.8.0")
-declare -a VERSIONS=("2.13.0")
+declare -a VERSIONS=("2.14.0")
 
 LP_SOSS_REMOTE="git+ssh://$USERNAME@git.launchpad.net/soss/+source"
 LP_PUBLIC_REMOTE="git+ssh://$USERNAME@git.launchpad.net/~data-platform/+git" # opensearch-project-components
