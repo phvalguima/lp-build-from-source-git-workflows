@@ -1,0 +1,53 @@
+changes by repo:
+    - opensearch-build
+        - replace opensearch components git repos by LP ones in the new release (manifests)
+        - pull LP scripts and merge from previous LP releases
+        - remove Pipenv depdencies and sync any change from previous LP branches
+        - replace gradle binaries path to artifactory
+    - opensearch
+        - replace gradle binaries path to artifactory
+    - opensearch-alerting
+        - replace gradle binaries path to artifactory
+    - opensearch-anomaly-detection
+        - replace gradle binaries path to artifactory
+    - opensearch-asynchronous-search
+        - replace gradle binaries path to artifactory
+    - opensearch-common-utils
+        - replace gradle binaries path to artifactory
+    - opensearch-cross-cluster-replication
+        - replace gradle binaries path to artifactory
+    - opensearch-geospatial
+        - replace gradle binaries path to artifactory
+    - opensearch-index-management
+        - replace gradle binaries path to artifactory
+    - opensearch-job-scheduler
+        - replace gradle binaries path to artifactory
+    - opensearch-k-nn
+        - update faiss and nmslib repos with latest upstream content
+        - change path of the previous 2 repos to LP ones in gitsubmodules
+        - replace gradle binaries path to artifactory
+    - opensearch-ml-commons
+        - replace gradle binaries path to artifactory
+    - opensearch-neural-search
+        - replace gradle binaries path to artifactory
+    - opensearch-notifications
+        - replace gradle binaries path to artifactory
+    - opensearch-observability
+        - replace gradle binaries path to artifactory
+    - opensearch-performance-analyzer
+        - update LP performance-analyzer-rca with latest "branch" content
+            - replace "2.8" with "lp-2.8"
+        - replace repo of performance-analyzer-rca to LP one
+        - replace gradle binaries path to artifactory
+    - opensearch-performance-analyzer-rca
+        - update LP performance-analyzer-rca with latest main content
+        - replace gradle binaries path to artifactory
+        - clone version branch and create new lp-version out of it
+    - opensearch-reporting
+        - replace gradle binaries path to artifactory
+    - opensearch-security
+        - replace gradle binaries path to artifactory
+    - opensearch-security-analytics
+        - replace gradle binaries path to artifactory
+    - opensearch-sql
+        - replace gradle binaries path to artifactory
