@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-declare -a VERSIONS=("2.14.0")
+declare -a VERSIONS=("2.15.1")
 
 pushd ../..
 
@@ -30,6 +30,7 @@ find . -maxdepth 1 -name "opensearch*" -type d | awk '{print $1}' | while read -
         # This commit is pulled:
         # https://git.launchpad.net/soss/+source/opensearch-build/commit/?h=lp-2.14.0&id=c15653f10ff00437e4fd62ac2cc455aef597731e
         original_branch="$(git branch --show-current)"
+        git fetch launchpad
         git checkout lp-2.14.0
         git switch "${original_branch}"
 
@@ -46,6 +47,7 @@ find . -maxdepth 1 -name "opensearch*" -type d | awk '{print $1}' | while read -
         # So, besides the gradle-wrapper.properties, we also need some extra information.
         # Pull it from another branch:
         original_branch="$(git branch --show-current)"
+        git fetch launchpad
         git checkout lp-2.13.0
         git switch "${original_branch}"
 

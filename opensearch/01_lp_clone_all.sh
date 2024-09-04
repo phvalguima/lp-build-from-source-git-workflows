@@ -8,7 +8,7 @@ if [ -z "${LP_USERNAME:-}" ]; then
     exit 1
 fi
 
-declare -a VERSIONS=("2.14.0")
+declare -a VERSIONS=("2.15.1")
 
 LP_SOSS_REMOTE="git+ssh://$LP_USERNAME@git.launchpad.net/soss/+source"
 LP_PUBLIC_REMOTE="git+ssh://$LP_USERNAME@git.launchpad.net/~data-platform/+git" # opensearch-project-components
@@ -48,7 +48,11 @@ function opensearch_git_checkout() {
         # - change branch name on build.gradle of performance-analyzer (add lp- prefix)
 
         for version in "${VERSIONS[@]}"; do
-            GH_BRANCH="${version}"
+            if [ "${repo}" == "opensearch-build" ]; then
+                GH_BRANCH="opensearch-2.15.0"
+            else
+                GH_BRANCH="2.15"
+            fi
             LP_BRANCH="lp-${version}"
 
             # add remote version branch
@@ -63,22 +67,22 @@ function opensearch_git_checkout() {
                 ref_name="${version}"
             fi
 
-            # get version / release tag and associated commit
-            version_tag="$(git tag -l --sort=version:refname "${ref_name}" | tail -1)"
-            gh_release_commit="$(git show-ref -s "${version_tag}")"
-
             # checkout version branch
-            git checkout -b "${GH_BRANCH}" "${gh_release_commit}"
+            git fetch origin
+            git checkout "${GH_BRANCH}"
 
             # create lp branch based on the version branch
             git checkout -b "${LP_BRANCH}"
 
+            # get version / release tag and associated commit
+            gh_release_commit="$(git show-ref -s origin/"${GH_BRANCH}")"
+
             # fetch current version's latest tag and tag current
-            lp_tag_name="lp-v${version_tag}"
+            lp_tag_name="lp-v${version}"
             git tag -a "${lp_tag_name}" "${gh_release_commit}" -m "tagging commit with tag: ${lp_tag_name}" --force
 
             # push lp version branch to LP
-            git push --set-upstream launchpad "${LP_BRANCH}"
+            git push --set-upstream launchpad "${LP_BRANCH}" --force
             git push launchpad --delete "${lp_tag_name}" || true
             git push launchpad "${lp_tag_name}"
 
