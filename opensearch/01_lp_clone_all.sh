@@ -8,7 +8,7 @@ if [ -z "${LP_USERNAME:-}" ]; then
     exit 1
 fi
 
-declare -a VERSIONS=("2.14.0")
+declare -a VERSIONS=("2.16.0")
 
 LP_SOSS_REMOTE="git+ssh://$LP_USERNAME@git.launchpad.net/soss/+source"
 LP_PUBLIC_REMOTE="git+ssh://$LP_USERNAME@git.launchpad.net/~data-platform/+git" # opensearch-project-components
@@ -115,6 +115,7 @@ declare -a REPOS=(
     custom-codecs
     skills
     flow-framework
+    query-insights
 )
 opensearch_git_checkout "https://github.com/opensearch-project"
 
