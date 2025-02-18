@@ -8,7 +8,7 @@ if [ -z "${LP_USERNAME:-}" ]; then
     exit 1
 fi
 
-declare -a VERSIONS=("2.16.0")
+declare -a VERSIONS=("2.19.0")
 
 LP_SOSS_REMOTE="git+ssh://$LP_USERNAME@git.launchpad.net/soss/+source"
 LP_PUBLIC_REMOTE="git+ssh://$LP_USERNAME@git.launchpad.net/~data-platform/+git" # opensearch-project-components
@@ -63,19 +63,30 @@ function opensearch_git_checkout() {
                 ref_name="${version}"
             fi
 
+            echo "Chosen ref name is: ${ref_name}"
+
             # get version / release tag and associated commit
             version_tag="$(git tag -l --sort=version:refname "${ref_name}" | tail -1)"
-            gh_release_commit="$(git show-ref -s "${version_tag}")"
+            gh_release_commit="$(git show-ref -s "${version_tag}" || true)"
 
-            # checkout version branch
-            git checkout -b "${GH_BRANCH}" "${gh_release_commit}"
+            if [ -z "${version_tag}" ] || [ -z "${gh_release_commit}" ]; then
+                git checkout "main"
+                version_tag="${version}.0"
+            else
+                # checkout version branch
+                git checkout -b "${GH_BRANCH}" "${gh_release_commit}"
+            fi
 
             # create lp branch based on the version branch
             git checkout -b "${LP_BRANCH}"
 
             # fetch current version's latest tag and tag current
             lp_tag_name="lp-v${version_tag}"
-            git tag -a "${lp_tag_name}" "${gh_release_commit}" -m "tagging commit with tag: ${lp_tag_name}" --force
+            if [ -z "${version_tag}" ] || [ -z "${gh_release_commit}" ]; then
+                git tag -a "${lp_tag_name}" -m "tagging commit with tag: ${lp_tag_name}" --force
+            else
+                git tag -a "${lp_tag_name}" "${gh_release_commit}" -m "tagging commit with tag: ${lp_tag_name}" --force
+            fi
 
             # push lp version branch to LP
             git push --set-upstream launchpad "${LP_BRANCH}"
