@@ -127,8 +127,13 @@ declare -a REPOS=(
     skills
     flow-framework
     query-insights
+    performance-analyzer-rca
+    opensearch-system-templates
+    opensearch-learning-to-rank-base
+    opensearch-remote-metadata-sdk
 )
 opensearch_git_checkout "https://github.com/opensearch-project"
+
 
 # ------------------------
 
@@ -141,7 +146,6 @@ opensearch_git_checkout "https://github.com/aiven-Open"
 
 # performance analyzer RCA, and faiss and nmslib
 declare -a ALTERNATE_REPOS=(
-    https://github.com/opensearch-project/performance-analyzer-rca.git
     https://github.com/facebookresearch/faiss.git
     https://github.com/nmslib/nmslib.git
     https://github.com/google/googletest.git
